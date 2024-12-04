@@ -110,4 +110,6 @@ public interface ReadonlyThreeTriosModel {
    * @return the player's score.
    */
   int getPlayerScore(IPlayer player);
+
+  List<ICard> getDeck();
 }

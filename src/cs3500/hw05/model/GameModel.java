@@ -376,6 +376,11 @@ public class GameModel implements IModel {
     return playerHandSize + playerGridCards;
   }
 
+  @Override
+  public List<ICard> getDeck() {
+    return this.deck;
+  }
+
   /**
    * Gets the hand of the player.
    *

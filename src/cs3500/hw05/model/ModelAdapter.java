@@ -1,6 +1,9 @@
 package cs3500.hw05.model;
 
 
+import cs3500.hw05.card.ICard;
+import cs3500.hw05.model.grid.IGrid;
+import cs3500.hw05.player.IPlayer;
 import cs3500.threetrios.providers.model.Grid;
 import cs3500.threetrios.providers.model.Model;
 import cs3500.threetrios.providers.model.ModelListener;
@@ -16,20 +19,14 @@ import cs3500.threetrios.providers.player.Player;
  * Adapter class for our provider's model methods. These are so they can be
  * used later on in their view implementation.
  */
-public class ModelAdapter implements Model {
-
-  private final ReadonlyThreeTriosModel gameModel;
-  private final List<Player> players;
-  private Grid grid;
-
+public class ModelAdapter extends GameModel implements Model {
   /**
    * Constructor for the model adapter, which initializes the model.
-   * @param gameModel our implementation of the model.
+   * @param model our implementation of the model.
    */
-  public ModelAdapter(ReadonlyThreeTriosModel gameModel, Grid grid) {
-    this.gameModel = gameModel;
-    this.grid = grid;
-    this.players = new ArrayList<>();
+  public ModelAdapter(IModel model) {
+    super(model.getGrid(), model.getDeck(), model.getGrid().getLayout(),
+        model.getPlayer1(), model.getPlayer2());
   }
   @Override
   public List<Card> getHand(Player player) {

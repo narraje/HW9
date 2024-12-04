@@ -30,7 +30,6 @@ import javax.swing.ToolTipManager;
  * players from one another.
  */
 public class HandPanel extends JPanel implements IHandPanel {
-
   private List<ICard> hand;
   private int selectedCardIndex = -1;
   private Color randomBorderColor;

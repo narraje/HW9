@@ -2,15 +2,21 @@ package cs3500.hw05;
 
 import cs3500.hw05.model.GameModel;
 import cs3500.hw05.model.GameBuilder;
+import cs3500.hw05.model.ModelAdapter;
 import cs3500.hw05.player.IPlayer;
 import cs3500.hw05.player.PlayerController;
 import cs3500.hw05.player.AiPlayerController;
 import cs3500.hw05.strategy.Strategy;
 import cs3500.hw05.strategy.MaxFlips;
 import cs3500.hw05.strategy.CornerStrategy;
+import cs3500.hw05.view.gui.IThreeTriosView;
 import cs3500.hw05.view.gui.ViewPlayer;
 
+import cs3500.threetrios.providers.model.ReadOnlyModel;
+import cs3500.threetrios.providers.view.SwingView;
+import cs3500.threetrios.providers.view.ThreeTrioSwingView;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -130,14 +136,16 @@ public class ThreeTrios {
     int cellCount = gameModel.getGrid().cellCount();
     int handSize = (cellCount + 1) / 2;
 
-    ViewPlayer viewPlayer1 = new ViewPlayer(gameModel);
-    ViewPlayer viewPlayer2 = new ViewPlayer(gameModel);
+
+    IThreeTriosView viewPlayer1 = new ViewPlayer(gameModel);
+    //IThreeTriosView viewPlayer2 = new ViewPlayer(gameModel);
+    SwingView viewPlayer2 = new ThreeTrioSwingView(new ModelAdapter(gameModel), "player1");
 
 
     PlayerController controller1 = createPlayerController(gameModel, viewPlayer1, player1Type,
         player1StrategyName, gameModel.getPlayer1());
-    PlayerController controller2 = createPlayerController(gameModel, viewPlayer2, player2Type,
-        player2StrategyName, gameModel.getPlayer2());
+    //PlayerController controller2 = createPlayerController(gameModel, viewPlayer2, player2Type,
+    //    player2StrategyName, gameModel.getPlayer2());
 
     gameModel.startGame(false, handSize);
   }
@@ -153,7 +161,7 @@ public class ThreeTrios {
    * @return the appropriate {@code PlayerController}
    */
   private static PlayerController createPlayerController(GameModel gameModel,
-      ViewPlayer viewPlayer, String playerType, String strategyName, IPlayer player) {
+      IThreeTriosView viewPlayer, String playerType, String strategyName, IPlayer player) {
     if (playerType.equalsIgnoreCase("ai")) {
       Strategy strategy = getStrategyByName(strategyName);
       return new AiPlayerController(gameModel, viewPlayer, player, strategy);
