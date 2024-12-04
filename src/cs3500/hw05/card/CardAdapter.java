@@ -84,8 +84,14 @@ public class CardAdapter implements Card {
 
   @Override
   public PlayerColor getColor() {
-    return null;
-    //not used
+    switch (card.getOwner()) {
+      case RED:
+        return PlayerColor.RED;
+      case BLUE:
+        return PlayerColor.BLUE;
+      default:
+        throw new IllegalArgumentException("Unknown color: " + card.getOwner());
+    }
   }
 
   @Override

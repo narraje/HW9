@@ -1,9 +1,13 @@
 package cs3500.hw05.model;
 
 
+import cs3500.hw05.card.CardAdapter;
 import cs3500.hw05.card.ICard;
 import cs3500.hw05.model.grid.IGrid;
+import cs3500.hw05.model.grid.cell.CellAdapter;
+import cs3500.hw05.model.grid.cell.ICell;
 import cs3500.hw05.player.IPlayer;
+import cs3500.hw05.player.PlayerAdapter;
 import cs3500.threetrios.providers.model.Grid;
 import cs3500.threetrios.providers.model.Model;
 import cs3500.threetrios.providers.model.ModelListener;
@@ -30,20 +34,36 @@ public class ModelAdapter extends GameModel implements Model {
   }
   @Override
   public List<Card> getHand(Player player) {
-    return null;
-    //not used;
+    IPlayer ourPlayer = player.getColor() == PlayerColor.RED
+        ? this.getPlayer1()
+        : this.getPlayer2();
+
+    List<ICard> ourHand = ourPlayer.getHand();
+    List<Card> theirHand = new ArrayList<>();
+
+    for (ICard card : ourHand) {
+      theirHand.add(new CardAdapter(card));
+      }
+    return theirHand;
   }
 
   @Override
   public List<Card> getHand(PlayerColor playerColor) {
-    return null;
-    //not used
+    IPlayer ourPlayer = playerColor == PlayerColor.RED
+        ? this.getPlayer1()
+        : this.getPlayer2();
+
+    List<ICard> ourHand = ourPlayer.getHand();
+    List<Card> theirHand = new ArrayList<>();
+    for (ICard card : ourHand) {
+      theirHand.add(new CardAdapter(card));
+    }
+    return theirHand;
   }
 
   @Override
   public boolean isGameOver() {
-    return false;
-    //no uses
+    return super.isGameOver();
   }
 
   @Override
@@ -60,7 +80,16 @@ public class ModelAdapter extends GameModel implements Model {
    */
   @Override
   public Cell[][] getGridArray() {
-    return new Cell[0][];
+    Cell[][] layout = new Cell[this.getRows()][this.getCols()];
+    for (int row = 0; row < getGrid().getRows(); row++) {
+      for (int col = 0; col < getGrid().getCols(); col++) {
+        ICell cell = this.getCell(new cs3500.hw05.model.grid.Posn(col, row));
+        if (this.getCell(new cs3500.hw05.model.grid.Posn(col, row)).isPlayable()) {
+          layout[row][col] = new CellAdapter(cell, new cs3500.hw05.model.grid.Posn(col, row));
+        }
+      }
+    }
+    return layout;
   }
 
   @Override

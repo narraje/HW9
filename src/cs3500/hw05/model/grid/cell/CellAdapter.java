@@ -14,9 +14,11 @@ import cs3500.threetrios.providers.model.Posn;
 public class CellAdapter implements Cell {
 
   private final ICell cell;
+  private final cs3500.hw05.model.grid.Posn pos;
 
-  public CellAdapter(ICell cell) {
+  public CellAdapter(ICell cell, cs3500.hw05.model.grid.Posn pos) {
     this.cell = cell;
+    this.pos = pos;
   }
   @Override
   public Color getCellColor() {
@@ -42,8 +44,7 @@ public class CellAdapter implements Cell {
 
   @Override
   public Posn getPosition() {
-    return null;
-    //not used
+    return new Posn(pos.getX(), pos.getY());
   }
 
   @Override

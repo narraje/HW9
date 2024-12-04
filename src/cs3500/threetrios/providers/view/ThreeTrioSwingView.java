@@ -29,6 +29,7 @@ public class ThreeTrioSwingView extends JFrame implements SwingView {
    * @param model the ReadOnly ThreeTrio game model to render.
    */
   public ThreeTrioSwingView(ReadOnlyModel model, String playerName) {
+    System.out.println("CALLS VIEW CONSTRUCTOR");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.playerName = Objects.requireNonNull(playerName);
 

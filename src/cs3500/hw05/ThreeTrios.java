@@ -10,6 +10,7 @@ import cs3500.hw05.strategy.Strategy;
 import cs3500.hw05.strategy.MaxFlips;
 import cs3500.hw05.strategy.CornerStrategy;
 import cs3500.hw05.view.gui.IThreeTriosView;
+import cs3500.hw05.view.gui.ViewAdapter;
 import cs3500.hw05.view.gui.ViewPlayer;
 
 import cs3500.threetrios.providers.model.ReadOnlyModel;
@@ -139,11 +140,12 @@ public class ThreeTrios {
 
     IThreeTriosView viewPlayer1 = new ViewPlayer(gameModel);
     //IThreeTriosView viewPlayer2 = new ViewPlayer(gameModel);
-    SwingView viewPlayer2 = new ThreeTrioSwingView(new ModelAdapter(gameModel), "player1");
 
+    SwingView theirViewPlayer2 = new ThreeTrioSwingView(new ModelAdapter(gameModel), "player1");
+    IThreeTriosView viewPlayer2 = new ViewAdapter(theirViewPlayer2);
 
-    PlayerController controller1 = createPlayerController(gameModel, viewPlayer1, player1Type,
-        player1StrategyName, gameModel.getPlayer1());
+    //PlayerController controller1 = createPlayerController(gameModel, viewPlayer1, player1Type,
+     //   player1StrategyName, gameModel.getPlayer1());
     //PlayerController controller2 = createPlayerController(gameModel, viewPlayer2, player2Type,
     //    player2StrategyName, gameModel.getPlayer2());
 
