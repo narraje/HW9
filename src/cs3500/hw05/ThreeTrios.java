@@ -13,7 +13,6 @@ import cs3500.hw05.view.gui.IThreeTriosView;
 import cs3500.hw05.view.gui.ViewAdapter;
 import cs3500.hw05.view.gui.ViewPlayer;
 
-import cs3500.threetrios.providers.model.ReadOnlyModel;
 import cs3500.threetrios.providers.view.SwingView;
 import cs3500.threetrios.providers.view.ThreeTrioSwingView;
 import java.io.FileNotFoundException;
@@ -141,13 +140,13 @@ public class ThreeTrios {
     IThreeTriosView viewPlayer1 = new ViewPlayer(gameModel);
     //IThreeTriosView viewPlayer2 = new ViewPlayer(gameModel);
 
-    SwingView theirViewPlayer2 = new ThreeTrioSwingView(new ModelAdapter(gameModel), "player1");
+    SwingView theirViewPlayer2 = new ThreeTrioSwingView(new ModelAdapter(gameModel), "player2");
     IThreeTriosView viewPlayer2 = new ViewAdapter(theirViewPlayer2);
 
-    //PlayerController controller1 = createPlayerController(gameModel, viewPlayer1, player1Type,
-     //   player1StrategyName, gameModel.getPlayer1());
-    //PlayerController controller2 = createPlayerController(gameModel, viewPlayer2, player2Type,
-    //    player2StrategyName, gameModel.getPlayer2());
+    PlayerController controller1 = createPlayerController(gameModel, viewPlayer1, player1Type,
+        player1StrategyName, gameModel.getPlayer1());
+    PlayerController controller2 = createPlayerController(gameModel, viewPlayer2, player2Type,
+        player2StrategyName, gameModel.getPlayer2());
 
     gameModel.startGame(false, handSize);
   }
