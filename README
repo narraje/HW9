@@ -1,0 +1,409 @@
+HW8 : Scroll to very bottom to find information on HW 8 - implementation
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Three Trios is a two-player card-based game implemented in Java.
+The objective of this game is to place cards on a grid, where opposing cards
+from different players engage in battles between adjacent cards, and control
+can be changed after a battle.
+
+The codebase here assumes a familiarity with Java, along with a love of learning
+strategic card games. Flexibility was kept in mind to allow
+easy adjustments to grid size, attributes of the card, as well as the rules themselves.
+
+
+
+Quick start:
+To start off with this game, you could use this following Java code. This snippit of
+code demonstrates how to use the GameBuilder class to initialize the game utilizing
+configuration files, along with performing a few game actions such as starting the
+game and placing a card.
+
+GameBuilder builder = new GameBuilder();
+GameModel game = builder.fromConfigFiles("test/cs3500/hw5/configs/grids/valid_grid",
+"cs3500/hw5/configs/cards/red_cards",
+"cs3500/hw5/configs/cards/blue_cards").build();
+
+game.startGame(false, 3);
+
+Posn pos = new Posn(1, 1);
+game.makeMove("RedCard1", pos, PlayerType.RED);
+
+
+
+Key Components:
+
+Some of the key components of this game are:
+    -GameModel : The class that controls the flow of the game, keeping track of
+    the grid, processing moves and player turns, starting the game, determining
+    when the game is over, and handling any logic for when cards go into battle phase.
+    Most of the subcomponents are interacted with by the grid.
+    -Grid: Represents the board for the game as a grid of cells. The grid holds the
+    responsibility of keeping track of which cells are playable or blocked, while handling
+    relationships between adjacent cells when battle time comes.
+    -Textual View: A text-based view for the game, which provides a visual representation
+    for the current state of the game. Characters and abbreviations are provided for every
+    element that is to be demonstrated in the view, which considers the current state of the model.
+
+Key Subcomponents:
+-Subcomponent within Game Model:
+    - Card: Represents a card in the game Three Trios, which has an owner, being one of RED or BLUE,
+    as well as attack values in each cardinal direction that will influence the result of battle
+    with adjacent cards.
+    - Player : Represents a Player in the game Three Trios. These players have a hand of cards to
+    start the game, which can be played one at a time during their turn.
+-Subcomponent within Grid:
+    - Cell : Represents the individual cells within the grid. These can start off by being either
+    emtpy card cell or a hole, meaning a card cannot be placed on that cell. If the card is empty, a card may
+    be placed on that cell. The Cell is responsible for supporting interactions like placing cards
+    and flipping ownership during a battle.
+
+-Overall Design Choices:
+  -We chose make the cells into an interface and implement the hole and cardcell so
+  that we could decide to make new types of cells in the future for different iterations
+  of the game.
+  -This same sentiment is why we designed the GameBuilder so that we could configure games
+  with different gameModel's; this is supported by our model interface which we could implement/
+  or extend the current model to make a different version possibly with different move logic
+  -We had more public methods than I would like but most of these exposed necessary information
+  for our model to work due to the modularity of our design.
+
+  -As for the gameModel and the player these are two interesting designs. In the future
+  beyond this assignment I plan on fully implementing the player interface and instead of
+  having one player class, I will make a blue player class and red player class, along with
+  an abstract player class that both will extend. I will include in the player classes the makeMove
+  method, draw method, etc, that way when adding an AI they can control that easily. Additionally,
+  I will represent a list of players in the gameModel and have the playerType be generic in the
+  gameModel instead of all the logic depending on red and blue types.
+
+
+Source Organization:
+The code is organized into a system of packages:
+- src.cs3500.hw05.model : contains GameModel, GameBuilder classes, the IModel interface,
+and packages that lead to the grid and configurations.
+- src.cs3500.hw05.model.grid : Contains the Grid class and Interface, along with a Posn class to
+handle positions on the board. All related classes for handling cells.
+- src.cs3500.hw05.model.grid.cell : The Cell classes and interface are found here, with classes for
+both a valid Card Cell and a Hole.
+- src.cs3500.hw05.player : Contains the Player and PlayerType classes.
+- src.cs3500.hw05.card : Contains related information to a Card, including the Card class and
+interface, as well as a Direction enumeration.
+
+************************************************************************************************
+
+PART 2
+
+EXTRA CREDIT:
+
+1. Implement the other two strategies mentioned in the prior subsection.
+
+After the first two implementations, both the third and fourth strategies were implemented.
+Both of these strategies, LeastFlippable and MiniMax, can be found at the package
+cs3500.hw05.strategy, along with the implementations of the other strategies.
+
+2.Fix your strategy implementations such that they can be recombined in various ways
+(and not just hard-coded in a fixed combination like our HybridMergeSorter from class.
+
+An implementation, HybridStrategy was created, which handles all four strategies and considers which
+of them would be the most appropriate at any given scenario. This can be found at
+cs3500.hw05.strategy
+
+3. Write tests that show your new strategies work solo and you can recombine strategies to make
+more complex ones.
+
+As for the tests, they can be found at the package cs3500.hw5.strategy, named
+LeastFlippableStrategyTest, MiniMaxTest, and HybridStrategyTest.
+
+CHANGES TO MODEL:
+-altered player constructor to take in a hand, allowed for more flexible design in other classes
+-changes most parameters and variables to take in interfaces rather than concrete classes (error
+(last hw)
+-added method for player score
+
+Coordinate System:
+The coordinate system in the Three Trios game is based on a grid structure,
+ where each cell is defined by its row (y coordinate) and column (x coordinate),
+ with the origin at the top-left corner (0, 0). This system is consistent between
+ the model (logic) and view (visual representation), ensuring that game positions
+ map directly to their screen locations. The grid grows with rows increasing downward
+ and columns increasing to the right.
+
+For rendering, the width and height of each cell are calculated to fit the panel
+dimensions (cellWidth and cellHeight), so each cell aligns correctly on the screen.
+Each grid cell's screen position is computed with screenX = gridCol * cellWidth and
+screenY = gridRow * cellHeight, while user clicks are converted back to grid
+coordinates with gridCol = mouseX / cellWidth and gridRow = mouseY / cellHeight,
+ensuring accurate mapping of mouse events to cells.
+
+Adjacent cells are determined using the Direction enum (North, South, East, West),
+enabling easy navigation across the grid, which is crucial for game mechanics
+like card flips. This coordinate system supports a responsive and consistent
+interaction model, maintaining alignment across logical and visual layers and
+ensuring intuitive handling of game elements, interactions, and adjacent positions.
+
+**************************************************************************************
+PART 3
+
+HOW TO START GAME
+If you have the project downloaded go to your terminal:
+
+1. cd to the "ExecuteThreeTrios" folder in the project (this contains our JAR)
+
+2. Execute "java -jar HW5.jar"
+
+-This will execute our jar file (with the config files required)
+
+STARTING THE GAME
+
+1. Upon executing of the JAR you will be prompting in the command line of your
+terminal to enter player types as follows:
+
+"Command-line arguments not provided or insufficient."
+"Please enter the player configurations."
+"Enter Player 1 Type (human/ai):"
+
+2. At this point you just type in the command-line either human or ai
+
+    -IF YOU TYPE AI YOU WILL BE SUBPROMPTED AS FOLLOWS:
+      "Enter Player 1 Strategy (maxFlips/cornerStrategy):"
+
+    -Here you type in the command line what strategy you want the ai player to follow
+
+3. At this point you are prompted for the second player as follows:
+"Enter Player 2 Type (human/ai):"
+
+    -IF YOU TYPE HUMAN YOU WILL NOT BE SUBPROMPTED AND THE GAME WILL START
+
+    -IF YOU TYPE AI YOU WILL FOLLOW #2 PROCESS AGAIN
+
+4. After this your game will start. However, if you selected two AI players (which you can)
+the game will start and end automatically and show you the game state at the end of the game
+and who won and their score.
+
+--------------------------------------------------------------------------------
+
+IMPORTANT INFORMATION REGARDING COORDINATE SYSTEM:
+
+Our Coordinate System Explained
+In our project, the coordinate system is set up such that:
+
+Coordinates are represented as (x, y)
+The x-coordinate corresponds to the vertical position (rows), and it increases downward
+The y-coordinate corresponds to the horizontal position (columns),
+and it increases to the right
+
+
+This means:
+
+The origin (0, 0) is located at the top-left corner of the grid
+As you move downward, the x-coordinate (row index) increases
+As you move rightward, the y-coordinate (column index) increases
+
+----------------------------------------
+
+Comparison with Standard Conventions
+
+In standard mathematical coordinate systems:
+  x increases to the right (horizontal axis)
+  y increases upward (vertical axis)
+
+----------------------------------------
+
+In GUI frameworks like Swing or JavaFX:
+  The origin is at the top-left corner
+    x increases to the right
+    y increases downward
+
+----------------------------------------
+
+Our coordinate system matches the GUI coordinate system in terms of y increasing downward,
+ but differs from the standard mathematical convention of the x-axis being horizontal.
+
+----------------------------------------
+
+Implications and Adjustments in our Implementation
+
+1. Grid Representation
+  Grid Indexing: We represent our grid as a 2D array where:
+  The first dimension (array index) represents the x-coordinate (row index)
+  The second dimension represents the y-coordinate (column index)
+
+----------------------------------------
+
+2. Rendering in the GUI
+
+Direct Mapping: Since our coordinate system matches the GUI's (with y increasing downward),
+we can render elements directly without transforming coordinates.
+
+Positioning Elements:
+  The cell at (x, y) corresponds to the pixel position:
+  pixelX = y * cellWidth
+  pixelY = x * cellHeight
+
+----------------------------------------
+
+3. Handling User Input
+  Coordinate Interpretation: When users input or select coordinates:
+    The first number represents the row (x-coordinate)
+    The second number represents the column (y-coordinate)
+
+----------------------------------------
+
+4. Neighbor Calculation
+  To calculate neighboring cells:
+
+    Above: (x - 1, y) (move up)
+    Below: (x + 1, y) (move down)
+    Left: (x, y - 1) (move left)
+    Right: (x, y + 1) (move right)
+
+----------------------------------------
+
+5. Our grid
+
+   y →
+   0    1    2    3    4
+x +----+----+----+----+----+
+0 |(0,0)|(0,1)|(0,2)|(0,3)|(0,4)|
+  +----+----+----+----+----+
+1 |(1,0)|(1,1)|(1,2)|(1,3)|(1,4)|
+  +----+----+----+----+----+
+2 |(2,0)|(2,1)|(2,2)|(2,3)|(2,4)|
+  +----+----+----+----+----+
+3 |(3,0)|(3,1)|(3,2)|(3,3)|(3,4)|
+  +----+----+----+----+----+
+4 |(4,0)|(4,1)|(4,2)|(4,3)|(4,4)|
+  +----+----+----+----+----+
+
+  AGAIN: Coordinates are represented as (x, y):
+         x: Represents the row index (vertical position), increasing downward
+         y: Represents the column index (horizontal position), increasing to the right
+
+--------------------------------------------------------------------------------
+
+NEW CLASSES:
+
+PlayerController :
+The PlayerController class is to represent the controller for a HUMAN player
+throughout the game. This class has the ability to connect the model, view,
+and the player, with the ability to handle the player’s actions. This class
+subscribes itself as an observer to both the Model and View Features.
+
+----------------------------------------
+
+AIPlayerController :
+The AIPlayerController class is designed to extend the implementation of the
+PlayerController, and has the ability to make a move on its own when the player realizes it’s their turn.
+
+----------------------------------------
+
+AIPlayer:
+Represents an AI player, which has the ability to make decisions on their own based on a predefined,
+customized strategy, without human input. Decisions on which card to pick and where to place them on
+the grid are automated.
+
+----------------------------------------
+
+AbstractPlayer :
+The base class for both the Player and AIPlayer classes.
+Shared functionality is provided in this class to manage a player’s hand of cards as well as their
+PlayerType.
+
+----------------------------------------
+
+Features (interface) :
+Features for the View of Three Trios - Defines the actions that the controller can trigger
+throughout the game such as selecting a card in the hand through selectCard, or placing a card at a
+specific position through the placeCard method.
+
+----------------------------------------
+
+ModelFeatures (Interface) : Features for the Model of Three Trios - Defines communication mechanisms
+from the model to the controller, allowing the model to notify the controller about critical game
+events, such as when it’s a player’s turn with onTurn, or when the game is over with onGameOver.
+
+----------------------------------------
+
+HandPanelListener (Interface) :
+Represents a listener interface for handling card selection events
+in a player’s hand panel, and should be used to notify the controller or model when a card is
+selected by the player.
+
+----------------------------------------
+
+GridPanelListener (Interface) : A listener for handling events related to placing cards on the game
+grid.
+The system is notified when a player attempts to place a card at a specific position on the grid.
+
+--------------------------------------------------------------------------------
+
+MOCKS AND TESTS:
+
+Found at package cs3500.hw5.controller
+
+MockGridPanel :
+A mock implementation of the IGridPanel interface. Method calls are logged.
+
+----------------------------------------
+
+MockHandPanel :
+Mock implementation of the IHandPanel interface. Hand states and card selections are logged.
+
+----------------------------------------
+
+MockThreeTriosView :
+Mock implementation of the IThreeTriosView interface.
+Both the left and right hand panels are handled, and view-related actions are logged throughout.
+
+----------------------------------------
+
+PlayerControllerTest : Tests for the human and AI Player controllers.
+
+
+
+
+
+
+
+
+
+###########################################################################
+
+HW 8 - VIEWS :
+
+
+The full list of interfaces/classes/enums that we sent to our customer group consists of the
+following:
+
+-Posn (class)
+-ReadonlyThreeTriosModel
+-Direction (Enum)
+-ICard
+-ICell
+-IGrid
+-IModel
+-IPlayer
+-ModelFeatures
+-PlayerType (Enum)
+- The entire view package
+
+including this README file along with an image of our game, named intermediateGameThreeTrios.
+
+
+The only change that we made for one of our customer groups was replacing instances of the
+PlayerController class in IThreeTriosView and IModel with the interface type, Features,
+as we accidentally used concrete types rather than the interface one. Outside of that,
+nothing was changed.
+
+
+#############################################################################
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+HW8 - implementation
+
+This file is split up into two sections, based off the requirements of the
+assignment, with a `CODE CRITIQUE` and `EXPERIENCE REVIEW` section.
+
+CODE CRITIQUE:
+
+
+The code that our providers sent to us was functional, but not without its flaws.
+While the code for the model (model + player + card, etc.) proved to be rather flexible, there were
+some issues when it came to working with them on our end. For one, there were some redundant methods
+included in the interfaces, such as two getHand methods in ReadOnlyModel, which did the exact same
+thing, but took in different parameters. Another source of confusion that showed up throughout their
+code was that there were three render methods included in their view, all with the same name, with
+two of them in the interface SwingView, and one of them in the interface View. There was also
+confusion in how both the model and grid both had a method that got the PlayerScore, and was named
+the same thing, which didn't seem necessary.
+
+As for our provider's views, while it is capable of producing an image of the board and hands on the
+screen, there was trouble figuring our how to work with their listeners and observers, as there were
+no interfaces provided there, but rather just concrete classes that didn't provide flexibility for
+us to work with.
+
+
+In terms of how cleanly and well-documented their code was - while everything was documented with
+java docs, some of their methods had rather non-descriptive documentation, which led to us having to
+ask our providers for specification on what exactly the purpose of a method was for. This of course,
+can be avoided with just more detail on some of the documentation - is this method primarily for an
+AI/human player? Why are the purpose of the multiple render/ getHand methods? -
+
+
+
+
+
+
+
+
+
+
+EXPERIENCE REVIEW:
+
+In terms of our own design, I wish that
+
+
+
+Our experience with our providers (not code related) was solid. Our providers were quick to respond
+to any emails looking for any clarification on their code, and were helpful in their responses.
+They did, however, send us their code two days after they were supposed to, which hindered progress
+for us.
