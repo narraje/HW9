@@ -91,12 +91,13 @@ public class MaxFlips implements Strategy {
             int defenseValue = adjacentCard.getAttackValue(direction.oppositeDirection());
 
             if (attackValue > defenseValue) {
-              countFlips++;
+              countFlips += 1 + countTotalFlips(model, playerType, adjacentCard, adjacentPosn);
             }
           }
         }
       }
     }
+    System.out.println("The total number of flips at posn " + posn + "is: " + countFlips);
     return countFlips;
   }
 
@@ -106,13 +107,13 @@ public class MaxFlips implements Strategy {
 
     switch (direction) {
       case North:
-        return new Posn(x - 1, y); // Up
+        return new Posn(x - 1, y);
       case South:
-        return new Posn(x + 1, y); // Down
+        return new Posn(x + 1, y);
       case East:
-        return new Posn(x, y + 1); // Right
+        return new Posn(x, y + 1);
       case West:
-        return new Posn(x, y - 1); // Left
+        return new Posn(x, y - 1);
       default:
         throw new IllegalArgumentException("Invalid direction");
     }
