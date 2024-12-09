@@ -29,7 +29,7 @@ public interface ICard {
    *
    * @return a new Card object that is a copy of this card
    */
-  Card copy();
+  ICard copy();
 
   /**
    * Gets the player type (owner) of this card.

@@ -303,7 +303,7 @@ public class GameModel implements IModel {
     }
 
 
-    Card cardToPlace = card.copy();
+    ICard cardToPlace = card.copy();
     ICell cell = grid.getCell(posn);
     if (!(cell instanceof CardCell)) {
       throw new IllegalStateException("Cannot place a card in a non-playable cell (Hole) at "
