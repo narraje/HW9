@@ -1,6 +1,11 @@
 package cs3500.hw05.model;
 
 import cs3500.hw05.card.ICard;
+import cs3500.hw05.model.battlerule.CompositeRule;
+import cs3500.hw05.model.battlerule.FallenAce;
+import cs3500.hw05.model.battlerule.PlusRule;
+import cs3500.hw05.model.battlerule.Reverse;
+import cs3500.hw05.model.battlerule.SameRule;
 import cs3500.hw05.model.configs.CardDatabaseParser;
 import cs3500.hw05.model.configs.GridConfigParser;
 import cs3500.hw05.model.grid.IGrid;
@@ -102,7 +107,7 @@ public class GameBuilder {
    * @return a new GameModel instance
    */
   public GameModel build() {
-    return new GameModel(grid, deck, layout, player1, player2);
+    return new GameModel(grid, deck, layout, player1, player2, List.of(new PlusRule()));
   }
 }
 

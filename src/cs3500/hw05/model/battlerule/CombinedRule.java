@@ -8,20 +8,20 @@ import cs3500.hw05.card.ICard;
 import cs3500.hw05.model.grid.IGrid;
 import cs3500.hw05.model.grid.Posn;
 
-/**
- * Represents a variant of the BattleRule - if the attacking value has a lower value than the
- * defending value, then the defending card is flipped.
- */
-public class Reverse implements BattleRule{
-
-
+public class CombinedRule implements BattleRule {
 
   @Override
   public boolean canFlip(ICard attacker, ICard defender, Direction direction) {
     int attackValue = attacker.getAttackValue(direction);
     int defenseValue = defender.getAttackValue(direction.oppositeDirection());
+    if (attackValue == 10 && defenseValue == 1) {
+      return true;
+    } else if (attackValue == 1 && defenseValue == 10) {
+      return false;
+    } else {
+      return defenseValue > attackValue;
+    }
 
-    return attackValue < defenseValue;
   }
 
   @Override

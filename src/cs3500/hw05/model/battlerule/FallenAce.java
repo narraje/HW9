@@ -1,7 +1,12 @@
 package cs3500.hw05.model.battlerule;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import cs3500.hw05.card.Direction;
 import cs3500.hw05.card.ICard;
+import cs3500.hw05.model.grid.IGrid;
+import cs3500.hw05.model.grid.Posn;
 
 /**
  * A battle rule in which a card with attack value 1 can flip a card with defense value 10 (A).
@@ -20,6 +25,12 @@ public class FallenAce implements BattleRule {
     } else {
       return attackValue > defenseValue;
     }
+  }
 
+
+
+  @Override
+  public Set<Posn> applyRule(ICard placedCard, Posn position, IGrid grid) {
+    return new HashSet<>();
   }
 }

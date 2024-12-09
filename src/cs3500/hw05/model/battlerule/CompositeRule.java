@@ -1,10 +1,17 @@
 package cs3500.hw05.model.battlerule;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import cs3500.hw05.card.Direction;
 import cs3500.hw05.card.ICard;
+import cs3500.hw05.model.grid.IGrid;
+import cs3500.hw05.model.grid.Posn;
+import cs3500.hw05.model.grid.cell.ICell;
+import cs3500.hw05.player.PlayerType;
 
 /**
  * The composite Battle Rule - when starting the game, rule variants are added here, which are used
@@ -34,5 +41,11 @@ public class CompositeRule implements BattleRule{
     }
     return false;
   }
+
+  @Override
+  public Set<Posn> applyRule(ICard placedCard, Posn position, IGrid grid) {
+    return new HashSet<>();
+  }
+
 
 }

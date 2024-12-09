@@ -3,6 +3,7 @@ package cs3500.hw05.model;
 import cs3500.hw05.card.Card;
 import cs3500.hw05.card.Direction;
 import cs3500.hw05.card.ICard;
+import cs3500.hw05.model.battlerule.BattleRule;
 import cs3500.hw05.model.grid.IGrid;
 import cs3500.hw05.model.grid.cell.CardCell;
 import cs3500.hw05.player.IPlayer;
@@ -40,6 +41,9 @@ public class GameModel implements IModel {
   private boolean gameStarted;
   private int filledCellCount = 0;
   private final List<PlayerController> observers = new ArrayList<>();
+  private final List<BattleRule> battleRules;
+
+
 
   /**
    * Constructs a new GameModelImpl with the provided grid and deck of cards.
@@ -52,7 +56,7 @@ public class GameModel implements IModel {
    * @throws IllegalArgumentException if there are not enough cards for the grid size.
    */
   public GameModel(IGrid grid, List<ICard> deck, char[][] layout, IPlayer player1,
-      IPlayer player2) {
+      IPlayer player2, List<BattleRule> battleRules) {
     if (grid == null || deck == null || player1 == null || player2 == null) {
       throw new IllegalArgumentException("Grid and deck cannot be null.");
     }
@@ -67,6 +71,7 @@ public class GameModel implements IModel {
     this.player2 = player2;
     this.currentPlayer = player1;
     this.gameStarted = false;
+    this.battleRules = battleRules;
 
     Set<String> uniqueCards = new HashSet<>();
     for (ICard card : deck) {
@@ -290,7 +295,7 @@ public class GameModel implements IModel {
    * @throws IllegalStateException if the game has not started
    * @throws IllegalArgumentException if the specified position is invalid or already occupied
    */
-  private void placeCard(ICard card, Posn posn) {
+  void placeCard(ICard card, Posn posn) {
     // Check that the game has started
     if (!gameStarted) {
       throw new IllegalStateException("Game has not started.");
@@ -345,20 +350,28 @@ public class GameModel implements IModel {
 
         if (adjacentCard != null && adjacentCard.getOwner() != playerType) {
           Direction directionToAdjacent = Direction.getDirection(currentPosition, adjacentPos);
-          Direction oppositeDirection = directionToAdjacent.oppositeDirection();
-
-          int attackValue = placedCard.getAttackValue(directionToAdjacent);
-          System.out.println("Placed cards attack value: " + attackValue);
-          int defenseValue = adjacentCard.getAttackValue(oppositeDirection);
-          System.out.println("adjacent cards attack value: " + defenseValue);
-
-          if (attackValue > defenseValue) {
+          boolean shouldFlip = false;
+          for (BattleRule rule : battleRules) {
+            if (rule.canFlip(placedCard, adjacentCard, directionToAdjacent)) {
+              shouldFlip = true;
+              break;
+            }
+          }
+          if (shouldFlip) {
             adjacentCell.flipCardOwner();
-            System.out.println("Adjacent card flipped");
             stack.push(adjacentPos);
           }
         }
       }
+      for (BattleRule rule : battleRules) {
+        Set<Posn> globalFlips = rule.applyRule(placedCard, currentPosition, grid);
+        for (Posn flipPos : globalFlips) {
+          if (!visitedPositions.contains(flipPos)) {
+            stack.push(flipPos);
+          }
+        }
+      }
+
     }
   }
 
@@ -412,7 +425,7 @@ public class GameModel implements IModel {
   /**
    * notifies the controller that a game over state was observed.
    */
-  private void notifyControllerOfGameOver() {
+  void notifyControllerOfGameOver() {
     for (PlayerController obs : observers) {
       obs.onGameOver(getWinner());
     }
