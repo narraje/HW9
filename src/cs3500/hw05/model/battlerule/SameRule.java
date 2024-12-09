@@ -1,18 +1,14 @@
 package cs3500.hw05.model.battlerule;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import cs3500.hw05.card.Direction;
 import cs3500.hw05.card.ICard;
 import cs3500.hw05.model.grid.IGrid;
 import cs3500.hw05.model.grid.Posn;
 import cs3500.hw05.model.grid.cell.ICell;
-import cs3500.hw05.player.PlayerType;
 
 /**
  * A variant of BattleRule which determines if the attacking value and defending value have the same
@@ -35,6 +31,8 @@ public class SameRule implements BattleRule {
       ICard card1 = cell1.getCard();
 
       if (card1 != null && cell1.isPlayable() && !card1.getOwner().equals(placedCard.getOwner())) {
+        int value1 = card1.getAttackValue(Direction.getDirection(pos1, position));
+
         for (int j = i + 1; j < adjacentPositions.size(); j++) {
           Posn pos2 = adjacentPositions.get(j);
           ICell cell2 = grid.getCell(pos2);
@@ -42,9 +40,9 @@ public class SameRule implements BattleRule {
 
           if (card2 != null && cell2.isPlayable() &&
                   !card2.getOwner().equals(placedCard.getOwner())) {
-            // Check for same attack value
-            if (card1.getAttackValue(Direction.getDirection(pos1, position)) ==
-                    card2.getAttackValue(Direction.getDirection(pos2, position))) {
+            int value2 = card2.getAttackValue(Direction.getDirection(pos2, position));
+
+            if (value1 == value2) {
               flippedPositions.add(pos1);
               flippedPositions.add(pos2);
             }
